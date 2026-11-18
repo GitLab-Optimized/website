@@ -1,0 +1,5 @@
+---
+Performance/ChainArrayAllocation:
+  Details: grace period
+  Exclude:
+    - 'ee/lib/ee/gitlab/import_export/members_mapper.rb'

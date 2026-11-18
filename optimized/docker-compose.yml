@@ -1,0 +1,82 @@
+name: gitlab-optimized
+
+# Memory caps add up to ~4.3 GB worst case; typical idle use is ~2.5 GB.
+services:
+  postgres:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: gitlab
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?set DB_PASSWORD in .env}
+      POSTGRES_DB: gitlabhq_production
+    command:
+      - postgres
+      - -c
+      - shared_buffers=256MB
+      - -c
+      - effective_cache_size=1GB
+      - -c
+      - work_mem=8MB
+      - -c
+      - maintenance_work_mem=64MB
+      - -c
+      - max_connections=60
+      # Lock table = this x max_connections; GitLab's schema load needs ~10k+ slots.
+      - -c
+      - max_locks_per_transaction=256
+      - -c
+      - max_worker_processes=4
+      - -c
+      - max_parallel_workers_per_gather=0
+      - -c
+      - random_page_cost=1.1
+      - -c
+      - max_wal_size=512MB
+      - -c
+      - checkpoint_timeout=15min
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "gitlab", "-d", "gitlabhq_production"]
+      interval: 10s
+      retries: 30
+    mem_limit: 768m
+
+  redis:
+    image: redis:7.4-alpine
+    restart: unless-stopped
+    command: ["redis-server", "--save", "300", "10", "--appendonly", "no", "--maxmemory-policy", "noeviction"]
+    volumes:
+      - redis:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      retries: 30
+    mem_limit: 256m
+
+  gitlab:
+    image: gitlab-optimized:latest
+    restart: unless-stopped
+    depends_on:
+      postgres: { condition: service_healthy }
+      redis: { condition: service_healthy }
+    environment:
+      GITLAB_HOST: ${GITLAB_HOST:?set GITLAB_HOST in .env}
+      GITLAB_EMAIL_FROM: ${GITLAB_EMAIL_FROM:-gitlab@localhost}
+      DB_HOST: postgres
+      DB_PASSWORD: ${DB_PASSWORD}
+      REDIS_URL: redis://redis:6379
+      PUMA_THREADS: ${PUMA_THREADS:-4}
+      SIDEKIQ_CONCURRENCY: ${SIDEKIQ_CONCURRENCY:-5}
+    ports:
+      - "127.0.0.1:${GITLAB_PORT:-8929}:8181"
+    volumes:
+      - data:/data
+    mem_limit: 3500m
+    memswap_limit: 4500m
+    stop_grace_period: 60s
+
+volumes:
+  postgres:
+  redis:
+  data:

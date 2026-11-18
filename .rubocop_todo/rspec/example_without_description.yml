@@ -1,0 +1,12 @@
+---
+RSpec/ExampleWithoutDescription:
+  Details: grace period
+  Exclude:
+    - 'spec/graphql/resolvers/ci/pipeline_analytics_resolver_spec.rb'
+    - 'spec/support/shared_examples/policies/project_policy_shared_examples.rb'
+    - 'spec/support/shared_examples/requests/api/npm_packages_shared_examples.rb'
+    - 'spec/support/shared_examples/services/container_registry_auth_service_shared_examples.rb'
+    - 'spec/support/shared_examples/services/merge_request_shared_examples.rb'
+    - 'spec/support/shared_examples/services/wikis/create_attachment_service_shared_examples.rb'
+    - 'spec/support/shared_examples/uploaders/gcs_signed_url_metadata_shared_examples.rb'
+    - 'spec/support/shared_examples/uploaders/gitlab_uploader_shared_examples.rb'

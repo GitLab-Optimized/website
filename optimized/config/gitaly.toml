@@ -1,0 +1,30 @@
+socket_path = "/home/git/gitlab/tmp/sockets/private/gitaly.socket"
+runtime_dir = "/home/git/gitaly-runtime"
+bin_dir = "/opt/gitaly/bin"
+
+[[storage]]
+name = "default"
+path = "/data/repositories"
+
+[logging]
+format = "json"
+level = "warn"
+
+[hooks]
+custom_hooks_dir = "/data/custom_hooks"
+
+[gitlab]
+url = "http://127.0.0.1:8181"
+secret_file = "/home/git/gitlab/.gitlab_shell_secret"
+
+# Upstream keeps 100 `git cat-file` processes warm; each one costs RAM.
+[git]
+catfile_cache_size = 10
+
+# Clones/fetches are the most CPU- and RAM-hungry Git work; queue them instead
+# of letting a burst of CI jobs fork dozens of pack-objects at once.
+[[concurrency]]
+rpc = "/gitaly.SmartHTTPService/PostUploadPackWithSidechannel"
+max_per_repo = 2
+max_queue_size = 20
+max_queue_wait = "120s"

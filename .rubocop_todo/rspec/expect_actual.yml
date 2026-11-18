@@ -1,0 +1,8 @@
+---
+# Cop supports --autocorrect.
+RSpec/ExpectActual:
+  Details: grace period
+  Exclude:
+    - 'spec/migrations/20260626080538_queue_backfill_bulk_import_exports_organization_id_spec.rb'
+    - 'spec/services/markup/rendering_service_spec.rb'
+    - 'spec/support_specs/matchers/be_sorted_spec.rb'

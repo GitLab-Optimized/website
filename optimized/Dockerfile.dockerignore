@@ -1,0 +1,15 @@
+# Build context is the repo root. ee/ is excluded on purpose: the image runs as
+# GitLab CE (FOSS), which boots with less memory and avoids shipping EE code.
+.git
+ee/
+jh/
+spec/
+qa/
+storybook/
+node_modules/
+public/assets/
+tmp/
+log/
+coverage/
+.agents/
+.claude/

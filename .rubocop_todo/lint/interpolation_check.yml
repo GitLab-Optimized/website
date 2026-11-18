@@ -1,0 +1,6 @@
+---
+# Cop supports --autocorrect.
+Lint/InterpolationCheck:
+  Details: grace period
+  Exclude:
+    - 'ee/lib/security/secret_detection/partner_tokens/generator/client_generator.rb'

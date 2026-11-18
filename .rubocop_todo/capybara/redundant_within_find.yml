@@ -1,0 +1,13 @@
+---
+# Cop supports --autocorrect.
+Capybara/RedundantWithinFind:
+  Details: grace period
+  Exclude:
+    - 'ee/spec/features/duo_chat/duo_chat_disabled_admin_spec.rb'
+    - 'ee/spec/features/groups/compliance_framework_report_spec.rb'
+    - 'ee/spec/features/groups/usage_quotas/seats_tab_spec.rb'
+    - 'ee/spec/features/projects/environments/environments_spec.rb'
+    - 'ee/spec/features/work_items/epics/epic_work_item_detail_spec.rb'
+    - 'spec/features/clusters/create_agent_spec.rb'
+    - 'spec/features/merge_request/user_resolves_conflicts_spec.rb'
+    - 'spec/support/helpers/features/admin_users_helpers.rb'

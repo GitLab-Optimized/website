@@ -1,0 +1,6 @@
+---
+# Cop supports --autocorrect.
+Rails/HttpPositionalArguments:
+  Details: grace period
+  Exclude:
+    - 'ee/spec/lib/omni_auth/strategies/group_saml_spec.rb'

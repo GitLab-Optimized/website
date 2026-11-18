@@ -1,0 +1,16 @@
+production:
+  main:
+    adapter: postgresql
+    encoding: unicode
+    database: ${DB_NAME:-gitlabhq_production}
+    username: ${DB_USER:-gitlab}
+    password: "${DB_PASSWORD}"
+    host: ${DB_HOST}
+  ci:
+    adapter: postgresql
+    encoding: unicode
+    database: ${DB_NAME:-gitlabhq_production}
+    database_tasks: false
+    username: ${DB_USER:-gitlab}
+    password: "${DB_PASSWORD}"
+    host: ${DB_HOST}

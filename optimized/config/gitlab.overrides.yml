@@ -1,0 +1,44 @@
+# Deep-merged over the `production:` section of config/gitlab.yml.example at
+# container start, so upstream defaults keep flowing in when the fork rebases.
+# Dollar-brace placeholders (optionally with :-default) come from the environment.
+gitlab:
+  host: ${GITLAB_HOST}
+  port: 443
+  https: true
+  email_from: ${GITLAB_EMAIL_FROM:-gitlab@localhost}
+  # The reverse proxy (Caddy on the host) reaches the container via the Docker bridge.
+  trusted_proxies:
+    - 127.0.0.0/8
+    - 172.16.0.0/12
+    - 10.0.0.0/8
+  usage_ping_enabled: false
+
+shared:
+  path: /data/shared
+
+backup:
+  path: /data/backups
+
+sidekiq:
+  log_format: json
+
+# Housekeeping jobs that upstream runs every 1-2 minutes. On a small instance
+# they find little to do, but each run still wakes Sidekiq and hits Postgres.
+cron_jobs:
+  poll_interval: 60
+  loose_foreign_keys_cleanup_worker: { cron: "*/5 * * * *" }
+  loose_foreign_keys_ci_pipelines_builds_cleanup_worker: { cron: "*/5 * * * *" }
+  loose_foreign_keys_ci_runners_cleanup_worker: { cron: "*/5 * * * *" }
+  loose_foreign_keys_merge_request_diff_commit_cleanup_worker: { cron: "*/5 * * * *" }
+  batched_git_ref_updates_cleanup_scheduler_worker: { cron: "*/5 * * * *" }
+  user_status_cleanup_batch_worker: { cron: "*/5 * * * *" }
+  users_migrate_records_to_ghost_user_in_batches_worker: { cron: "*/10 * * * *" }
+  users_migrate_human_records_to_ghost_user_in_batches_worker: { cron: "*/10 * * * *" }
+  users_migrate_service_account_records_to_ghost_user_in_batches_worker: { cron: "*/10 * * * *" }
+  users_migrate_project_bot_records_to_ghost_user_in_batches_worker: { cron: "*/10 * * * *" }
+  service_desk_custom_email_verification_cleanup: { cron: "*/10 * * * *" }
+  performance_bar_stats: { cron: "*/15 * * * *" }
+  # No container registry or Cells topology service in this deployment.
+  cleanup_container_registry_worker: { cron: "*/30 * * * *" }
+  ml_schedule_experiment_deletion_cron_worker: { cron: "*/30 * * * *" }
+  topology_service_stale_requests_cleanup_worker: { cron: "0 * * * *" }

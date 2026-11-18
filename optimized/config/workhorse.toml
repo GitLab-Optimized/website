@@ -1,0 +1,7 @@
+[redis]
+URL = "${REDIS_URL}"
+
+# Avatar/image thumbnailing forks a scaler process per request; cap it at one.
+[image_resizer]
+max_scaler_procs = 1
+max_filesize = 250000

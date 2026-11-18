@@ -1,0 +1,6 @@
+---
+# Cop supports --autocorrect.
+Rails/EnumHash:
+  Details: grace period
+  Exclude:
+    - 'ee/app/models/merge_requests/status_check_response.rb'
