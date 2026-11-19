@@ -52,9 +52,11 @@ GOMEMLIMIT=${GITALY_GOMEMLIMIT:-300MiB} /opt/gitaly/bin/gitaly /home/git/gitaly.
 pids+=($!)
 
 log "configuring database (schema load on first boot, migrations afterwards)"
+# cache:clear drops fragments rendered by the previous image (Redis outlives
+# the container), the same as Omnibus does after an upgrade.
 GITLAB_ROOT_PASSWORD=$(cat "$DATA/config/initial_root_password") \
   GITLAB_ROOT_EMAIL=${GITLAB_ROOT_EMAIL:-} \
-  "${ruby_env[@]}" bundle exec rake gitlab:db:configure
+  "${ruby_env[@]}" bundle exec rake gitlab:db:configure cache:clear
 
 # Rails rewrites secrets.yml (replacing the symlink) if it ever adds a key.
 if [ -f "$APP/config/secrets.yml" ] && [ ! -L "$APP/config/secrets.yml" ]; then
